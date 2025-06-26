@@ -23,6 +23,7 @@ func (b *Quote) printHTML(p *printer) {
 }
 
 func (b *Quote) printMarkdown(p *printer) {
+	p.maybeNL()
 	p.maybeQuoteNL('>')
 	p.WriteString("> ")
 	defer p.pop(p.push("> "))

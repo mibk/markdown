@@ -93,6 +93,7 @@ func (t *Table) printMarkdown(p *printer) {
 		rows = append(rows, xrow)
 	}
 
+	p.maybeNL()
 	p.maybeQuoteNL('|')
 	for i, cell := range hdr {
 		p.WriteString("| ")
