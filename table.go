@@ -93,6 +93,18 @@ func (t *Table) printMarkdown(p *printer) {
 		rows = append(rows, xrow)
 	}
 
+	// Ensure min. column widths.
+	for i, a := range t.Align {
+		w := maxWidths[i]
+		switch a {
+		case "left", "right":
+			w = max(2, w)
+		case "center":
+			w = max(3, w)
+		}
+		maxWidths[i] = w
+	}
+
 	p.maybeNL()
 	p.maybeQuoteNL('|')
 	for i, cell := range hdr {
