@@ -72,3 +72,19 @@ Test cases for Format of lists.
      interface eth0
      ```
      where XXX marks the last octet
+-- indented_code_after_list --
+  2. You may modify your copy and
+distribute such modifications under
+these conditions:
+
+    a) You must cause the modified files
+    b) You must keep the notices intact
+-- want --
+ 2. You may modify your copy and
+    distribute such modifications under
+    these conditions:
+
+```
+a) You must cause the modified files
+b) You must keep the notices intact
+```

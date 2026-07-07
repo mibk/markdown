@@ -54,19 +54,27 @@ func (b *CodeBlock) printHTML(p *printer) {
 }
 
 func (b *CodeBlock) printMarkdown(p *printer) {
-	if b.Fence == "" {
-		p.maybeNL()
-		for i, line := range b.Text {
-			if i > 0 {
-				p.nl()
-			}
-			p.md("    ")
-			p.md(line)
-			p.noTrim()
-		}
-		return
-	}
 	fence := b.Fence
+	if fence == "" {
+		if _, ok := p.prevBlock.(*List); !ok {
+			p.maybeNL()
+			for i, line := range b.Text {
+				if i > 0 {
+					p.nl()
+				}
+				p.md("    ")
+				p.md(line)
+				p.noTrim()
+			}
+			return
+		}
+		// Directly after a list an indented code block cannot be
+		// expressed: its 4 spaces land at (or past) the items'
+		// content column, so parsers absorb the block into the
+		// last item as a loose continuation paragraph. Print it
+		// fenced instead - same document, different spelling.
+		fence = "```"
+	}
 	// Make the fence longer than any run of the fence character in the
 	// content, so no content line can close the block early. A run
 	// embedded in a longer line couldn't anyway, so this may lengthen
