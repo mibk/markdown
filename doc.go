@@ -42,13 +42,17 @@ func (b *Document) printMarkdown(p *printer) {
 }
 
 func printMarkdownBlocks(bs []Block, p *printer) {
+	old := p.prevBlock
+	p.prevBlock = nil
 	for bn, b := range bs {
 		if bn > 0 {
 			p.nl() // end block
-			if p.loose > 0 {
+			if p.curLoose {
 				p.nl()
 			}
 		}
 		b.printMarkdown(p)
+		p.prevBlock = b
 	}
+	p.prevBlock = old
 }

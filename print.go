@@ -19,6 +19,9 @@ type printer struct {
 	prefixOld   []byte
 	prefixOlder []byte
 	trimLimit   int
+	// prevBlock is the sibling block printed just before the one
+	// being printed, within the current container; nil for the first.
+	prevBlock Block
 	listOut
 	footnotes    map[*Footnote]*printedNote
 	footnotelist []*printedNote
@@ -29,6 +32,12 @@ type listOut struct {
 	num    int
 	loose  int
 	tight  int
+	// curLoose is the looseness of the innermost list being printed.
+	// The loose/tight counters aggregate the whole stack, but block
+	// separation within an item is governed by the item's own list:
+	// a blank line inside a tight list nested in a loose one would
+	// make the tight list loose, changing the document.
+	curLoose bool
 }
 
 func (w *printer) WriteStrings(list ...string) {

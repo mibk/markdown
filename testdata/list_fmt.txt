@@ -1,0 +1,60 @@
+Test cases for Format of lists.
+-- tight_item_with_sublist --
+ 3. Item text introducing a nested list,
+    wrapped onto a second line:
+      - first child,
+      - second child.
+-- tight_deep_sublists --
+  - Fixed issues in this area,
+    wrapped onto a second line:
+      - first fix here,
+      - second fix here.
+-- loose_item_with_sublist --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+
+      - first child,
+      - second child.
+-- ordered_sublist_not_starting_at_one --
+  - Item text introducing an ordered list,
+    wrapped onto a second line:
+
+     2. second point.
+-- tight_sublists_inside_loose_list --
+  - First item of a loose list,
+    wrapped onto a second line.
+
+  - Build system
+      - ESBuild
+          - primary choice for new projects
+
+  - Last item here.
+-- want --
+  - First item of a loose list,
+    wrapped onto a second line.
+
+  - Build system
+
+      - ESBuild
+          - primary choice for new projects
+
+  - Last item here.
+-- fence_tight_in_loose_item --
+  - First item of a loose list.
+
+  - Steps to follow:
+    ```
+    run this
+    ```
+
+  - Last item here.
+-- want --
+  - First item of a loose list.
+
+  - Steps to follow:
+
+    ```
+    run this
+    ```
+
+  - Last item here.

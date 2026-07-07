@@ -111,12 +111,23 @@ func (b *List) printMarkdown(p *printer) {
 	}()
 	p.bullet = b.Bullet
 	p.num = b.Start
+	enclosed := p.loose+p.tight > 0
 	if b.Loose {
 		p.loose++
 	} else {
 		p.tight++
 	}
-	p.maybeNL()
+	p.curLoose = b.Loose
+	// Nested in a list item and directly after the item's paragraph,
+	// a list whose first marker line can interrupt the paragraph must
+	// stay flush against it: parsers start the new list there anyway,
+	// and the blank line maybeNL would insert makes the *enclosing*
+	// list loose - a different document. Everywhere else keep the
+	// conservative blank line (at the top level it is plain style,
+	// with no effect on the parse).
+	if !(enclosed && b.canInterruptParagraph() && isParagraphish(p.prevBlock)) {
+		p.maybeNL()
+	}
 	for i, item := range b.Items {
 		if i > 0 {
 			p.nl()
@@ -462,4 +473,35 @@ func parseTaskList(p *parser, list *List) {
 		text.Inline = append([]Inline{&Task{Checked: s[1] == 'x' || s[1] == 'X'},
 			&Plain{Text: s[len("[x] "):]}}, text.Inline[1:]...)
 	}
+}
+
+// canInterruptParagraph reports whether the list's first marker line
+// would start a new list even when it directly follows a paragraph
+// line. Per CommonMark that holds for bullet lists and for ordered
+// lists starting at 1, provided the first item's content begins on the
+// marker line itself (an item starting with a blank cannot interrupt).
+func (b *List) canInterruptParagraph() bool {
+	if (b.Bullet == '.' || b.Bullet == ')') && b.Start != 1 {
+		return false
+	}
+	if len(b.Items) == 0 {
+		return false
+	}
+	item, ok := b.Items[0].(*Item)
+	if !ok || len(item.Blocks) == 0 {
+		return false
+	}
+	_, ok = item.Blocks[0].(*Text)
+	return ok
+}
+
+// isParagraphish reports whether b prints as paragraph text - the one
+// block kind a directly following list marker line could be mistaken
+// for a continuation of.
+func isParagraphish(b Block) bool {
+	switch b.(type) {
+	case *Paragraph, *Text:
+		return true
+	}
+	return false
 }

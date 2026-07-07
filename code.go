@@ -66,7 +66,11 @@ func (b *CodeBlock) printMarkdown(p *printer) {
 		}
 	} else {
 		// TODO compute correct fence
-		if p.tight == 0 {
+		// Inside a tight list the fence must stay flush against the
+		// preceding block: a fence line interrupts a paragraph, and a
+		// blank line here would make the tight list loose. Anywhere
+		// else (top level, loose list) keep the separating blank.
+		if p.loose+p.tight == 0 || p.curLoose {
 			p.maybeNL()
 		}
 		p.md(b.Fence)
