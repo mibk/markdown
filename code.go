@@ -64,25 +64,36 @@ func (b *CodeBlock) printMarkdown(p *printer) {
 			p.md(line)
 			p.noTrim()
 		}
-	} else {
-		// TODO compute correct fence
-		// Inside a tight list the fence must stay flush against the
-		// preceding block: a fence line interrupts a paragraph, and a
-		// blank line here would make the tight list loose. Anywhere
-		// else (top level, loose list) keep the separating blank.
-		if p.loose+p.tight == 0 || p.curLoose {
-			p.maybeNL()
-		}
-		p.md(b.Fence)
-		p.md(b.Info)
-		for _, line := range b.Text {
-			p.nl()
-			p.md(line)
-			p.noTrim()
-		}
-		p.nl()
-		p.md(b.Fence)
+		return
 	}
+	fence := b.Fence
+	// Make the fence longer than any run of the fence character in the
+	// content, so no content line can close the block early. A run
+	// embedded in a longer line couldn't anyway, so this may lengthen
+	// more than strictly necessary, but never too little.
+	n := len(fence)
+	for _, line := range b.Text {
+		n = max(n, maxRun(line, fence[0])+1)
+	}
+	if n > len(fence) {
+		fence = strings.Repeat(fence[:1], n)
+	}
+	// Inside a tight list the fence must stay flush against the
+	// preceding block: a fence line interrupts a paragraph, and a
+	// blank line here would make the tight list loose. Anywhere
+	// else (top level, loose list) keep the separating blank.
+	if p.loose+p.tight == 0 || p.curLoose {
+		p.maybeNL()
+	}
+	p.md(fence)
+	p.md(b.Info)
+	for _, line := range b.Text {
+		p.nl()
+		p.md(line)
+		p.noTrim()
+	}
+	p.nl()
+	p.md(fence)
 }
 
 // startIndentedCodeBlock is a [starter] for an indented [CodeBlock].
