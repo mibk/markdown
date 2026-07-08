@@ -88,3 +88,17 @@ these conditions:
 a) You must cause the modified files
 b) You must keep the notices intact
 ```
+-- tight_item_with_loose_sublist --
+- Item text introducing a nested list,
+  wrapped onto a second line:
+  - first child,
+
+  - second child.
+- Last item here.
+-- want --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      - first child,
+
+      - second child.
+  - Last item here.

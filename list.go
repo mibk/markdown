@@ -491,6 +491,9 @@ func parseTaskList(p *parser, list *List) {
 // line. Per CommonMark that holds for bullet lists and for ordered
 // lists starting at 1, provided the first item's content begins on the
 // marker line itself (an item starting with a blank cannot interrupt).
+// Looseness is irrelevant here - it is fixed by blank lines within the
+// list, not by its opening marker - so a loose list (first block a
+// *Paragraph) interrupts exactly when a tight one (a *Text) would.
 func (b *List) canInterruptParagraph() bool {
 	if (b.Bullet == '.' || b.Bullet == ')') && b.Start != 1 {
 		return false
@@ -502,8 +505,7 @@ func (b *List) canInterruptParagraph() bool {
 	if !ok || len(item.Blocks) == 0 {
 		return false
 	}
-	_, ok = item.Blocks[0].(*Text)
-	return ok
+	return isParagraphish(item.Blocks[0])
 }
 
 // isParagraphish reports whether b prints as paragraph text - the one
