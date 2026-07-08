@@ -46,7 +46,6 @@ var roundTripFailures = map[string]bool{
 	"TestToHTML/spec0.29/171": true, // link ref def
 	"TestToHTML/spec0.29/208": true, // weird list
 	"TestToHTML/spec0.29/227": true, // weird list
-	"TestToHTML/spec0.29/241": true, // weird list
 	"TestToHTML/spec0.29/282": true, // weird list
 	"TestToHTML/spec0.29/283": true, // weird list
 	"TestToHTML/spec0.29/312": true, // escape plain
@@ -75,7 +74,6 @@ var roundTripFailures = map[string]bool{
 	"TestToHTML/spec0.30/202": true, // link ref def
 	"TestToHTML/spec0.30/238": true, // weird list
 	"TestToHTML/spec0.30/257": true, // weird list
-	"TestToHTML/spec0.30/271": true, // weird list
 	"TestToHTML/spec0.30/312": true, // weird list
 	"TestToHTML/spec0.30/313": true, // weird list
 	"TestToHTML/spec0.30/331": true, // backtick spaces
@@ -98,7 +96,6 @@ var roundTripFailures = map[string]bool{
 	"TestToHTML/spec0.31.2/202": true, // link ref def
 	"TestToHTML/spec0.31.2/238": true, // weird list
 	"TestToHTML/spec0.31.2/257": true, // weird list
-	"TestToHTML/spec0.31.2/271": true, // weird list
 	"TestToHTML/spec0.31.2/312": true, // weird list
 	"TestToHTML/spec0.31.2/313": true, // weird list
 	"TestToHTML/spec0.31.2/331": true, // backtick spaces

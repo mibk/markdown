@@ -58,3 +58,17 @@ Test cases for Format of lists.
     ```
 
   - Last item here.
+-- wide_ordered_marker_with_fence --
+10. Set the fixed IP address
+    - uncomment the block in the config
+    ```
+    interface eth0
+    ```
+    where XXX marks the last octet
+-- want --
+ 10. Set the fixed IP address
+       - uncomment the block in the config
+     ```
+     interface eth0
+     ```
+     where XXX marks the last octet

@@ -7,6 +7,7 @@ package markdown
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // TODO should Item implement Block?
@@ -148,11 +149,21 @@ func (b *Item) printMarkdown(p *printer) {
 		marker = fmt.Sprintf("  %c ", p.bullet)
 	}
 	p.WriteString(marker)
+	// The continuation prefix must reach the marker's full width when
+	// the item holds block structure: the item's content column sits
+	// right after the marker, and a block construct (fence, second
+	// paragraph) printed shallower than that column would fall out of
+	// the item on reparse. But a lone paragraph needs the opposite: its
+	// soft-wrapped lines survive only as lazy continuations, and at a
+	// wide marker's (" 10. ") content column a line like "~~~" would
+	// reparse as a fence. Capped at 4 columns - indented-code depth,
+	// which can never interrupt a paragraph - it stays lazy no matter
+	// what it looks like.
 	n := len(marker)
-	if n > 4 {
+	if n > 4 && len(b.Blocks) == 1 && isParagraphish(b.Blocks[0]) {
 		n = 4
 	}
-	defer p.pop(p.push("    "[:n]))
+	defer p.pop(p.push(strings.Repeat(" ", n)))
 	printMarkdownBlocks(b.Blocks, p)
 }
 
