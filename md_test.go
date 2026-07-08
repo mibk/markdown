@@ -291,6 +291,12 @@ func TestFormat(t *testing.T) {
 					if h != want {
 						t.Errorf("input %q\nparse: \n%s\nhave %q\nwant %q", in, dump(doc), h, want)
 					}
+					// Format must be idempotent: reformatting its own
+					// output reproduces it, so a document never drifts
+					// under repeated formatting.
+					if got := Format(docWant); got != want {
+						t.Errorf("not idempotent\nwant %q\nreformat %q", want, got)
+					}
 				})
 			}
 		})
