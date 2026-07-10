@@ -72,7 +72,7 @@ func (t *Table) printMarkdown(p *printer) {
 	toString := func(txt *Text) string {
 		xb.buf.Reset()
 		txt.printMarkdown(xb)
-		return strings.TrimSpace(xb.buf.String())
+		return tableEscape(strings.TrimSpace(xb.buf.String()))
 	}
 
 	for i, txt := range t.Header {
@@ -145,6 +145,14 @@ func (t *Table) printMarkdown(p *printer) {
 		}
 		p.WriteString("|")
 	}
+}
+
+// tableEscape escapes every pipe in a rendered cell so it survives the
+// reparse: the table splitter treats any unescaped | as a cell boundary,
+// and it strips \| escapes before inline parsing (see parseRow), so even
+// pipes inside code spans must be escaped here.
+func tableEscape(text string) string {
+	return strings.ReplaceAll(text, "|", `\|`)
 }
 
 // repeat prints c n times to p.

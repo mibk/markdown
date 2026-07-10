@@ -33,9 +33,6 @@ var roundTripFailures = map[string]bool{
 	"TestToHTML/extra/76":  true, // weird list
 	"TestToHTML/extra/115": true, // weird list
 
-	"TestToHTML/gfm_ext/9":  true, // table
-	"TestToHTML/gfm_ext/11": true, // table
-
 	"TestToHTML/spec0.29/19":  true, // thematic break
 	"TestToHTML/spec0.29/40":  true, // indentation of heading
 	"TestToHTML/spec0.29/51":  true, // newline in heading
@@ -96,8 +93,6 @@ var roundTripFailures = map[string]bool{
 	"TestToHTML/spec0.31.2/349": true, // backticks
 	"TestToHTML/spec0.31.2/506": true, // escape quotes
 
-	"TestToHTML/table/gfm200": true, // table
-	"TestToHTML/table/2":      true, // table
 }
 
 func TestToHTML(t *testing.T) {

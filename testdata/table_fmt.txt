@@ -46,6 +46,14 @@
     | col1 | col2 |
     | ---- | ---- |
     | 1    | 2    |
+-- escaped_pipe --
+|Name|Val|
+|--|--|
+|a \| b|`x\|y`|
+-- want --
+| Name   | Val    |
+| ------ | ------ |
+| a \| b | `x\|y` |
 -- bigvalues --
 | foo | bar      | baz |
 | --- | -------- | --- |
