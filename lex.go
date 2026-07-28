@@ -84,6 +84,10 @@ var mdEscaper = strings.NewReplacer(
 
 // mdLinkEscaper escapes symbols that have meaning inside a link target.
 var mdLinkEscaper = strings.NewReplacer(
+	// A backslash must escape itself,
+	// or it would escape whatever character follows it in the output —
+	// including the closing delimiter.
+	`\`, `\\`,
 	`(`, `\(`,
 	`)`, `\)`,
 	`<`, `\<`,

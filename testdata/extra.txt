@@ -1332,3 +1332,7 @@ Line break before indented code: \
 <p>Line break before indented code: \</p>
 <pre><code>hello world
 </code></pre>
+-- 175.md --
+[a](b\\)
+-- 175.html --
+<p><a href="b%5C">a</a></p>
