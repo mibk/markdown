@@ -426,6 +426,11 @@ type Task struct {
 	// [Parser.TaskMark] is set. It is 0 when unset, in which case
 	// printing falls back to Checked; when both are set, Mark wins.
 	Mark rune
+
+	// Name is the marker's name - the letters after "]." without the
+	// dot - when [Parser.TaskName] is set, and "" for a marker that
+	// carries none.
+	Name string
 }
 
 func (*Task) Inline() {}
@@ -439,6 +444,9 @@ func (x *Task) printHTML(p *printer) {
 	if x.Mark != 0 && x.Mark != ' ' && x.Mark != 'x' && x.Mark != 'X' {
 		p.html(`data-mark="`, htmlEscaper.Replace(string(x.Mark)), `" `)
 	}
+	if x.Name != "" {
+		p.html(`data-name="`, htmlEscaper.Replace(x.Name), `" `)
+	}
 	p.html(`disabled="" type="checkbox"> `)
 }
 
@@ -450,7 +458,11 @@ func (x *Task) printMarkdown(p *printer) {
 			mark = 'x'
 		}
 	}
-	p.text("[", string(mark), "] ")
+	p.text("[", string(mark), "]")
+	if x.Name != "" {
+		p.text(".", x.Name)
+	}
+	p.text(" ")
 }
 
 func (x *Task) printText(p *printer) {
@@ -492,11 +504,12 @@ func parseTaskList(p *parser, list *List) {
 		if !ok {
 			continue
 		}
+		name, i := taskName(p, s, i)
 		if s[i] != ' ' && s[i] != '\t' {
 			p.corner = true // goldmark does not require the space
 			continue
 		}
-		text.Inline = append([]Inline{&Task{Checked: mark == 'x' || mark == 'X', Mark: mark},
+		text.Inline = append([]Inline{&Task{Checked: mark == 'x' || mark == 'X', Mark: mark, Name: name},
 			&Plain{Text: s[i+1:]}}, text.Inline[1:]...)
 	}
 }
@@ -529,6 +542,26 @@ func taskMark(p *parser, s string) (mark rune, next int, ok bool) {
 		return 0, 0, false
 	}
 	return mark, next + 1, true
+}
+
+// taskName parses the optional name of a task list item marker - a dot
+// and one or more lowercase letters at s[i:], just past the marker's
+// closing bracket - returning the name and the index just past it. A
+// name only counts when the space the marker requires follows it too;
+// otherwise there is no name and s[i:] is left to be handled the way it
+// is without the extension.
+func taskName(p *parser, s string, i int) (name string, next int) {
+	if !p.TaskName || s[i] != '.' {
+		return "", i
+	}
+	j := i + 1
+	for j < len(s) && 'a' <= s[j] && s[j] <= 'z' {
+		j++
+	}
+	if j == i+1 || j >= len(s) || (s[j] != ' ' && s[j] != '\t') {
+		return "", i
+	}
+	return s[i+1 : j], j
 }
 
 // canInterruptParagraph reports whether the list's first marker line

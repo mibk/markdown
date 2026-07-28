@@ -17,3 +17,13 @@ with plain TaskList these are all ordinary text.
 <li>[?] huh</li>
 <li>[✓] check</li>
 </ul>
+-- name.md --
+- [ ].a foo
+- [x].ab bar
+- [t].a baz
+-- name.html --
+<ul>
+<li>[ ].a foo</li>
+<li>[x].ab bar</li>
+<li>[t].a baz</li>
+</ul>

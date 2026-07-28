@@ -63,6 +63,10 @@ type Parser struct {
 	// single character, not just the GFM [ ] and [x].
 	TaskMark bool
 
+	// TaskName determines whether a task list item marker may carry a
+	// name: [ ].a
+	TaskName bool
+
 	// TODO
 	AutoLinkText       bool
 	AutoLinkAssumeHTTP bool

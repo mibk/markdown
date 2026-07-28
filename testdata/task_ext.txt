@@ -1,7 +1,8 @@
-Non-standard task list extension tests: task marks holding any character.
+Non-standard task list extension tests: task marks holding any
+character, and named task marks.
 
 -- parser.json --
-{"TaskList": true, "TaskMark": true}
+{"TaskList": true, "TaskMark": true, "TaskName": true}
 -- mark.md --
 - [ ] todo
 - [x] done
@@ -37,4 +38,30 @@ Non-standard task list extension tests: task marks holding any character.
 <li>[ab] two</li>
 <li>[]] bracket</li>
 <li>[u]tight</li>
+</ul>
+-- name.md --
+- [ ].a foo
+- [x].ab bar
+- [t].a baz
+- [ ].afoo qux
+-- name.html --
+<ul>
+<li><input data-name="a" disabled="" type="checkbox"> foo</li>
+<li><input checked="" data-name="ab" disabled="" type="checkbox"> bar</li>
+<li><input data-mark="t" data-name="a" disabled="" type="checkbox"> baz</li>
+<li><input data-name="afoo" disabled="" type="checkbox"> qux</li>
+</ul>
+-- noname.md --
+- [ ].A foo
+- [ ]. a foo
+- [ ]. foo
+- [ ].afoo
+- [ ]..a foo
+-- noname.html --
+<ul>
+<li>[ ].A foo</li>
+<li>[ ]. a foo</li>
+<li>[ ]. foo</li>
+<li>[ ].afoo</li>
+<li>[ ]..a foo</li>
 </ul>
