@@ -3,3 +3,7 @@
 -- gfm279.md --
   - [ ] foo
   - [x] bar
+-- X.md --
+  - [X] foo
+-- want --
+  - [x] foo

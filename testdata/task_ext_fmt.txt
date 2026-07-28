@@ -8,3 +8,9 @@
   + [t].a foo
   + [ ].ab bar
   + [x].a baz
+-- X.md --
+  + [X] foo
+  + [X].a bar
+-- want --
+  + [x] foo
+  + [x].a bar

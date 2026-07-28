@@ -423,8 +423,12 @@ type Task struct {
 
 	// Mark is the character between the brackets: ' ' or 'x' with
 	// plain GFM task lists, any single character when
-	// [Parser.TaskMark] is set. It is 0 when unset, in which case
-	// printing falls back to Checked; when both are set, Mark wins.
+	// [Parser.TaskMark] is set. It is 0 when unset.
+	//
+	// Mark decides how the box prints only when it says something
+	// Checked cannot: a GFM mark (or none at all) prints from Checked
+	// instead, so [X] keeps normalizing to [x]. That is also the
+	// distinction the HTML printer makes with its data-mark attribute.
 	Mark rune
 
 	// Name is the marker's name - the letters after "]." without the
@@ -440,8 +444,7 @@ func (x *Task) printHTML(p *printer) {
 	if x.Checked {
 		p.html(`checked="" `)
 	}
-	// Report the mark only when it holds something a checkbox cannot.
-	if x.Mark != 0 && x.Mark != ' ' && x.Mark != 'x' && x.Mark != 'X' {
+	if !x.isCheckbox() {
 		p.html(`data-mark="`, htmlEscaper.Replace(string(x.Mark)), `" `)
 	}
 	if x.Name != "" {
@@ -452,7 +455,7 @@ func (x *Task) printHTML(p *printer) {
 
 func (x *Task) printMarkdown(p *printer) {
 	mark := x.Mark
-	if mark == 0 {
+	if x.isCheckbox() {
 		mark = ' '
 		if x.Checked {
 			mark = 'x'
@@ -463,6 +466,14 @@ func (x *Task) printMarkdown(p *printer) {
 		p.text(".", x.Name)
 	}
 	p.text(" ")
+}
+
+// isCheckbox reports whether the mark says nothing the checkbox itself
+// does not - whether it is a GFM mark, or none at all. Both printers
+// key off this: such a mark prints from Checked, and in HTML the
+// checked attribute already carries it.
+func (x *Task) isCheckbox() bool {
+	return x.Mark == 0 || x.Mark == ' ' || x.Mark == 'x' || x.Mark == 'X'
 }
 
 func (x *Task) printText(p *printer) {
