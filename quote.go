@@ -23,7 +23,12 @@ func (b *Quote) printHTML(p *printer) {
 }
 
 func (b *Quote) printMarkdown(p *printer) {
-	p.maybeNL()
+	// Inside a tight list the blank line must not be inserted: it would
+	// make the list loose, a different document. A quote line can
+	// interrupt a paragraph anyway, so staying flush is safe.
+	if p.loose+p.tight == 0 || p.curLoose {
+		p.maybeNL()
+	}
 	p.maybeQuoteNL('>')
 	p.WriteString("> ")
 	defer p.pop(p.push("> "))

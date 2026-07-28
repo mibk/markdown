@@ -102,3 +102,8 @@ b) You must keep the notices intact
 
       - second child.
   - Last item here.
+-- tight_item_with_quote --
+  - Item text introducing a quote,
+    wrapped onto a second line:
+    > quoted
+  - Last item here.

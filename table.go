@@ -105,7 +105,12 @@ func (t *Table) printMarkdown(p *printer) {
 		maxWidths[i] = w
 	}
 
-	p.maybeNL()
+	// Inside a tight list the blank line must not be inserted: it would
+	// make the list loose, a different document. A delimiter row can
+	// interrupt a paragraph anyway, so staying flush is safe.
+	if p.loose+p.tight == 0 || p.curLoose {
+		p.maybeNL()
+	}
 	p.maybeQuoteNL('|')
 	for i, cell := range hdr {
 		p.WriteString("| ")

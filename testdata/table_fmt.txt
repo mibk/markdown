@@ -66,3 +66,10 @@ Text.
 | --- | -------- | --- |
 | 1   | 22345678 | 3   |
 | a   | b        | c   |
+-- tight_list_item --
+  - Item text introducing a table,
+    wrapped onto a second line:
+    | a | b |
+    | - | - |
+    | 1 | 2 |
+  - Last item here.
