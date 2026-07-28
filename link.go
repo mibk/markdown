@@ -468,7 +468,10 @@ func parseLinkDest(s string, i int) (string, int, bool) {
 				// TODO unescape?
 				return mdUnescape(s[i+1 : j]), j + 1, true
 			}
-			if s[j] == '\\' {
+			// A backslash before a line ending is a hard line break,
+			// not an escape,
+			// so leave the line ending for the check above to reject.
+			if s[j] == '\\' && j+1 < len(s) && s[j+1] != '\n' {
 				j++
 			}
 		}
@@ -496,7 +499,10 @@ Loop:
 			}
 			depth--
 		case '\\':
-			if j+1 < len(s) {
+			// A backslash before a line ending is a hard line break,
+			// not an escape,
+			// so leave the line ending to end the destination below.
+			if j+1 < len(s) && s[j+1] != '\n' {
 				if s[j+1] == ' ' || s[j+1] == '\t' {
 					return "", 0, false
 				}

@@ -1336,3 +1336,36 @@ Line break before indented code: \
 [a](b\\)
 -- 175.html --
 <p><a href="b%5C">a</a></p>
+-- 176.md --
+[](\
+)
+-- 176.html --
+<p><a href="%5C"></a></p>
+-- 177.md --
+See the [spec](\
+) for details.
+-- 177.html --
+<p>See the <a href="%5C">spec</a> for details.</p>
+-- 178.md --
+[0]:\
+0
+-- 178.html --
+<p>0</p>
+-- 179.md --
+[a](b\
+c)
+-- 179.html --
+<p>[a](b<br />
+c)</p>
+-- 180.md --
+[a](<x\
+y>)
+-- 180.html --
+<p>[a](&lt;x<br />
+y&gt;)</p>
+-- 181.md --
+[0]: <x\
+y>
+-- 181.html --
+<p>[0]: &lt;x<br />
+y&gt;</p>
