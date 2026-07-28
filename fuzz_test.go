@@ -25,7 +25,9 @@ func FuzzGoldmark(f *testing.F) {
 		f.Fatal(err)
 	}
 	for _, file := range files {
-		if strings.HasSuffix(file, "to_markdown.txt") {
+		// The format tests hold single documents, not the .md/.html
+		// pairs seeded below.
+		if strings.HasSuffix(file, "_fmt.txt") {
 			continue
 		}
 		a, err := txtar.ParseFile(file)
