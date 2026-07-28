@@ -101,6 +101,11 @@ func (t *Table) printMarkdown(p *printer) {
 			w = max(2, w)
 		case "center":
 			w = max(3, w)
+		default:
+			// An unaligned column still needs one dash: an all-empty
+			// column would otherwise print a delimiter row of no
+			// dashes at all, which is no longer a table.
+			w = max(1, w)
 		}
 		maxWidths[i] = w
 	}

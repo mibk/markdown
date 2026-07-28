@@ -73,3 +73,11 @@ Text.
     | - | - |
     | 1 | 2 |
   - Last item here.
+-- empty_column --
+| |
+| - |
+| |
+-- want --
+|   |
+| - |
+|   |
