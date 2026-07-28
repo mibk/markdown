@@ -134,6 +134,9 @@ func parseFootnoteRef(p *parser, s string, start int) (x Inline, end int, ok boo
 }
 
 func startFootnote(p *parser, s line) (line, bool) {
+	if !p.Footnote {
+		return s, false
+	}
 	t := s
 	t.trimSpace(0, 3, false)
 	if !t.trim('[') || !t.trim('^') {

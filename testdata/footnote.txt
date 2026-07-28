@@ -63,3 +63,15 @@ Footnote[^aBc].
 <p>[^1]x</p>
 <p>[^1]. foo</p>
 <p>[^1]</p>
+-- parser.json --
+{}
+-- off.md --
+[^1]: with the extension off this is only a paragraph
+
+x
+-- off.html --
+<p>[^1]: with the extension off this is only a paragraph</p>
+<p>x</p>
+-- offlinkdef.md --
+[^1]: def
+-- offlinkdef.html --
