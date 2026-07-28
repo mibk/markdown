@@ -107,3 +107,37 @@ b) You must keep the notices intact
     wrapped onto a second line:
     > quoted
   - Last item here.
+-- sublist_starting_with_heading --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      - # nested heading
+  - Last item here.
+-- sublist_starting_with_quote --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      - > quoted
+  - Last item here.
+-- sublist_starting_with_fence --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      - ```
+        run this
+        ```
+  - Last item here.
+-- sublist_starting_with_sublist --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      -   - grandchild
+  - Last item here.
+-- sublist_starting_with_html --
+  - Item text introducing a nested list,
+    wrapped onto a second line:
+      - <div>
+        raw
+        </div>
+  - Last item here.
+-- ordered_sublist_starting_with_heading --
+ 1. Item text introducing a nested list,
+    wrapped onto a second line:
+     1. # nested heading
+ 2. Last item here.

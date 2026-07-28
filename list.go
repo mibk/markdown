@@ -583,9 +583,16 @@ func taskName(p *parser, s string, i int) (name string, next int) {
 // line. Per CommonMark that holds for bullet lists and for ordered
 // lists starting at 1, provided the first item's content begins on the
 // marker line itself (an item starting with a blank cannot interrupt).
-// Looseness is irrelevant here - it is fixed by blank lines within the
-// list, not by its opening marker - so a loose list (first block a
-// *Paragraph) interrupts exactly when a tight one (a *Text) would.
+// What kind of block the item begins with does not matter, and neither
+// does looseness - it is fixed by blank lines within the list, not by
+// its opening marker.
+//
+// The printed form always puts the content on the marker line: nothing
+// can push it to the next line, because the marker line never matches
+// the continuation prefix a leading maybeNL compares against. Even an
+// item parsed from a source that did start with a blank line prints
+// flush. So only an item with no content at all - one that prints as a
+// bare marker - fails to interrupt.
 func (b *List) canInterruptParagraph() bool {
 	if (b.Bullet == '.' || b.Bullet == ')') && b.Start != 1 {
 		return false
@@ -594,10 +601,7 @@ func (b *List) canInterruptParagraph() bool {
 		return false
 	}
 	item, ok := b.Items[0].(*Item)
-	if !ok || len(item.Blocks) == 0 {
-		return false
-	}
-	return isParagraphish(item.Blocks[0])
+	return ok && len(item.Blocks) > 0
 }
 
 // isParagraphish reports whether b prints as paragraph text - the one
