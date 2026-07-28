@@ -141,7 +141,7 @@ func startFootnote(p *parser, s line) (line, bool) {
 	}
 	label := t.string()
 	i := strings.Index(label, "]")
-	if i < 0 || i+1 >= len(label) && label[i+1] != ':' {
+	if i < 0 || i+1 >= len(label) || label[i+1] != ':' {
 		return s, false
 	}
 	label = label[:i]

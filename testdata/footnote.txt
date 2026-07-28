@@ -50,3 +50,16 @@ Footnote[^aBc].
 <a class="fnref" href="#fnref-1">↩</a></p>
 </li>
 </ol>
+-- nodef.md --
+[^1] foo
+
+[^1]x
+
+[^1]. foo
+
+[^1]
+-- nodef.html --
+<p>[^1] foo</p>
+<p>[^1]x</p>
+<p>[^1]. foo</p>
+<p>[^1]</p>
