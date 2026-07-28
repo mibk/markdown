@@ -520,6 +520,9 @@ func parseTaskList(p *parser, list *List) {
 			p.corner = true // goldmark does not require the space
 			continue
 		}
+		if name != "" || mark != ' ' && mark != 'x' && mark != 'X' {
+			p.corner = true // goldmark has neither extension
+		}
 		text.Inline = append([]Inline{&Task{Checked: mark == 'x' || mark == 'X', Mark: mark, Name: name},
 			&Plain{Text: s[i+1:]}}, text.Inline[1:]...)
 	}
