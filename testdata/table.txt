@@ -254,3 +254,21 @@ c</p>
 </tbody>
 </table>
 <p>|</p>
+-- extrapipe.md --
+| a | b |
+| - | - ||
+-- extrapipe.html --
+<p>| a | b |
+| - | - ||</p>
+-- emptycell.md --
+| a | b |
+| - | - | |
+-- emptycell.html --
+<p>| a | b |
+| - | - | |</p>
+-- leadingpipe.md --
+| a | b |
+|| - | - |
+-- leadingpipe.html --
+<p>| a | b |
+|| - | - |</p>

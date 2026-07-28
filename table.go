@@ -262,6 +262,16 @@ func isTableStart(hdr1, delim1 string) bool {
 		return false
 	}
 
+	// The scan above consumes the | that ends each column, so a row
+	// carrying one | too many - "| - | - ||", or a trailing empty cell
+	// "| - | - | |" - scans as one column short of the cells it holds.
+	// Counting the cells the way the header is counted rejects it, as
+	// GitHub does: the delimiter row must match the header in the
+	// number of cells, and an empty cell holds no dashes to match with.
+	if col != tableCount(delim) {
+		return false
+	}
+
 	return col == tableCount(tableTrimOuter(hdr1))
 }
 
