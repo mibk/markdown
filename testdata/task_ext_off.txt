@@ -1,0 +1,19 @@
+The non-standard task list extensions stay off unless asked for:
+with plain TaskList these are all ordinary text.
+
+-- parser.json --
+{"TaskList": true}
+-- mark.md --
+- [ ] todo
+- [u] unknown
+- [T] spawn
+- [?] huh
+- [✓] check
+-- mark.html --
+<ul>
+<li><input disabled="" type="checkbox"> todo</li>
+<li>[u] unknown</li>
+<li>[T] spawn</li>
+<li>[?] huh</li>
+<li>[✓] check</li>
+</ul>

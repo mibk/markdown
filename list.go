@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // TODO should Item implement Block?
@@ -418,7 +419,13 @@ func listCorner(p *parser, list *List) {
 //
 // [task list item marker]: https://github.github.com/gfm/#task-list-items-extension-
 type Task struct {
-	Checked bool
+	Checked bool // whether the mark is x or X
+
+	// Mark is the character between the brackets: ' ' or 'x' with
+	// plain GFM task lists, any single character when
+	// [Parser.TaskMark] is set. It is 0 when unset, in which case
+	// printing falls back to Checked; when both are set, Mark wins.
+	Mark rune
 }
 
 func (*Task) Inline() {}
@@ -428,15 +435,22 @@ func (x *Task) printHTML(p *printer) {
 	if x.Checked {
 		p.html(`checked="" `)
 	}
+	// Report the mark only when it holds something a checkbox cannot.
+	if x.Mark != 0 && x.Mark != ' ' && x.Mark != 'x' && x.Mark != 'X' {
+		p.html(`data-mark="`, htmlEscaper.Replace(string(x.Mark)), `" `)
+	}
 	p.html(`disabled="" type="checkbox"> `)
 }
 
 func (x *Task) printMarkdown(p *printer) {
-	if x.Checked {
-		p.text(`[x] `)
-	} else {
-		p.text(`[ ] `)
+	mark := x.Mark
+	if mark == 0 {
+		mark = ' '
+		if x.Checked {
+			mark = 'x'
+		}
 	}
+	p.text("[", string(mark), "] ")
 }
 
 func (x *Task) printText(p *printer) {
@@ -474,16 +488,47 @@ func parseTaskList(p *parser, list *List) {
 			continue
 		}
 		s := pl.Text
-		if len(s) < 4 || s[0] != '[' || s[2] != ']' || (s[1] != ' ' && s[1] != 'x' && s[1] != 'X') {
+		mark, i, ok := taskMark(p, s)
+		if !ok {
 			continue
 		}
-		if s[3] != ' ' && s[3] != '\t' {
+		if s[i] != ' ' && s[i] != '\t' {
 			p.corner = true // goldmark does not require the space
 			continue
 		}
-		text.Inline = append([]Inline{&Task{Checked: s[1] == 'x' || s[1] == 'X'},
-			&Plain{Text: s[len("[x] "):]}}, text.Inline[1:]...)
+		text.Inline = append([]Inline{&Task{Checked: mark == 'x' || mark == 'X', Mark: mark},
+			&Plain{Text: s[i+1:]}}, text.Inline[1:]...)
 	}
+}
+
+// taskMark parses a task list item marker at the start of s, returning
+// the mark character and the index just past the marker - the byte that
+// must be the space separating the marker from the item's text, and so
+// always a valid index into s.
+func taskMark(p *parser, s string) (mark rune, next int, ok bool) {
+	if len(s) < 2 || s[0] != '[' {
+		return 0, 0, false
+	}
+	if p.TaskMark {
+		r, w := utf8.DecodeRuneInString(s[1:])
+		// A ] mark would turn []] into a task; leave the second ]
+		// closing the marker, as it does without the extension.
+		// Invalid UTF-8 is no mark at all.
+		if r == ']' || r == utf8.RuneError && w <= 1 {
+			return 0, 0, false
+		}
+		mark, next = r, 1+w
+	} else {
+		mark = rune(s[1])
+		if mark != ' ' && mark != 'x' && mark != 'X' {
+			return 0, 0, false
+		}
+		next = 2
+	}
+	if next+1 >= len(s) || s[next] != ']' {
+		return 0, 0, false
+	}
+	return mark, next + 1, true
 }
 
 // canInterruptParagraph reports whether the list's first marker line

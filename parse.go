@@ -59,6 +59,10 @@ type Parser struct {
 	// that turns into an unchecked or checked check box.
 	TaskList bool
 
+	// TaskMark determines whether a task list item marker may hold any
+	// single character, not just the GFM [ ] and [x].
+	TaskMark bool
+
 	// TODO
 	AutoLinkText       bool
 	AutoLinkAssumeHTTP bool

@@ -1,0 +1,6 @@
+-- parser.json --
+{"TaskList": true, "TaskMark": true}
+-- mark.md --
+  + [u] foo
+  + [✓] bar
+  + [x] baz

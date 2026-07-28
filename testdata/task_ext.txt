@@ -1,0 +1,40 @@
+Non-standard task list extension tests: task marks holding any character.
+
+-- parser.json --
+{"TaskList": true, "TaskMark": true}
+-- mark.md --
+- [ ] todo
+- [x] done
+- [X] done
+- [u] unknown
+- [T] spawn
+- [?] huh
+- [✓] check
+-- mark.html --
+<ul>
+<li><input disabled="" type="checkbox"> todo</li>
+<li><input checked="" disabled="" type="checkbox"> done</li>
+<li><input checked="" disabled="" type="checkbox"> done</li>
+<li><input data-mark="u" disabled="" type="checkbox"> unknown</li>
+<li><input data-mark="T" disabled="" type="checkbox"> spawn</li>
+<li><input data-mark="?" disabled="" type="checkbox"> huh</li>
+<li><input data-mark="✓" disabled="" type="checkbox"> check</li>
+</ul>
+-- markesc.md --
+- [&] amp
+-- markesc.html --
+<ul>
+<li><input data-mark="&amp;" disabled="" type="checkbox"> amp</li>
+</ul>
+-- nomark.md --
+- [] empty
+- [ab] two
+- []] bracket
+- [u]tight
+-- nomark.html --
+<ul>
+<li>[] empty</li>
+<li>[ab] two</li>
+<li>[]] bracket</li>
+<li>[u]tight</li>
+</ul>
