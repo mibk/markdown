@@ -120,14 +120,24 @@ func (b *List) printMarkdown(p *printer) {
 		p.tight++
 	}
 	p.curLoose = b.Loose
-	// Nested in a list item and directly after the item's paragraph,
+	// Nested in a list item and directly after a preceding sibling,
 	// a list whose first marker line can interrupt the paragraph must
 	// stay flush against it: parsers start the new list there anyway,
 	// and the blank line maybeNL would insert makes the *enclosing*
 	// list loose - a different document. Everywhere else keep the
 	// conservative blank line (at the top level it is plain style,
 	// with no effect on the parse).
-	if !(enclosed && b.canInterruptParagraph() && isParagraphish(p.prevBlock)) {
+	//
+	// The marker line ends the sibling whatever it is: a paragraph is
+	// interrupted by the marker itself (see canInterruptParagraph),
+	// and a heading, thematic break, fence, quote, table or list has
+	// closed by the line after it. An HTML block of type 6 or 7 would
+	// swallow the marker line instead, but no spelling of such an item
+	// exists to choose - flush makes the marker HTML text, and a blank
+	// line turns the enclosing list loose - and parsing cannot build
+	// one, because the marker line is absorbed into the block. So there
+	// is nothing to special-case here.
+	if !(enclosed && b.canInterruptParagraph() && p.prevBlock != nil) {
 		p.maybeNL()
 	}
 	for i, item := range b.Items {

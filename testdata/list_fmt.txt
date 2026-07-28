@@ -141,3 +141,40 @@ b) You must keep the notices intact
     wrapped onto a second line:
      1. # nested heading
  2. Last item here.
+-- sibling_heading --
+  - foo
+    # h
+      - x
+  - z
+-- sibling_quote --
+  - foo
+    > q
+      - x
+  - z
+-- sibling_thematic_break --
+  - foo
+    ***
+      - x
+  - z
+-- sibling_fence --
+  - foo
+    ```
+    c
+    ```
+      - x
+  - z
+-- sibling_list --
+  - foo
+      - a
+      * b
+  - z
+-- sibling_html_block --
+  - foo
+    <!-- c -->
+      - x
+  - z
+-- sibling_heading_in_quote --
+>   - foo
+>     # h
+>       - x
+>   - z
