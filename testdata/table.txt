@@ -272,3 +272,31 @@ c</p>
 -- leadingpipe.html --
 <p>| a | b |
 || - | - |</p>
+-- extrapipealigncenter.md --
+0
+:-:||
+-- extrapipealigncenter.html --
+<p>0
+:-:||</p>
+-- extrapipealignleft.md --
+0
+:-||
+-- extrapipealignleft.html --
+<p>0
+:-||</p>
+-- extrapipebodyrow.md --
+00
+-||
+0
+-- extrapipebodyrow.html --
+<p>00
+-||
+0</p>
+-- delimcellspace.md --
+0|0
+|- -
+\|0
+-- delimcellspace.html --
+<p>0|0
+|- -
+|0</p>
