@@ -1369,3 +1369,12 @@ y>
 -- 181.html --
 <p>[0]: &lt;x<br />
 y&gt;</p>
+-- 182.md --
+    a
+       ^J
+    b
+-- 182.html --
+<pre><code>a
+   ^J
+b
+</code></pre>

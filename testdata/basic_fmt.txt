@@ -148,6 +148,20 @@ done
 ```go
 func f(int)
 ```
+-- codeblock7 --
+Indented
+
+    a
+
+    b
+
+done.
+-- codeblock8 --
+> ```
+> a
+>
+> b
+> ```
 -- htmlblock --
 Literally,
 <pre>

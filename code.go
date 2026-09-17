@@ -62,6 +62,10 @@ func (b *CodeBlock) printMarkdown(p *printer) {
 				if i > 0 {
 					p.nl()
 				}
+				if line == "" {
+					// Indenting an empty line would only leave trailing whitespace.
+					continue
+				}
 				p.md("    ")
 				p.md(line)
 				p.noTrim()
@@ -97,6 +101,10 @@ func (b *CodeBlock) printMarkdown(p *printer) {
 	p.md(b.Info)
 	for _, line := range b.Text {
 		p.nl()
+		if line == "" {
+			// On an empty line noTrim would only keep the container prefix's trailing space.
+			continue
+		}
 		p.md(line)
 		p.noTrim()
 	}
