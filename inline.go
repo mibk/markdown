@@ -67,6 +67,9 @@ func (x *Plain) printMarkdown(p *printer) {
 		if i > 0 {
 			p.nl()
 		}
+		if line != "" && p.attaches(line[0]) {
+			p.WriteByte('\\')
+		}
 		p.WriteString(line)
 		p.noTrim()
 	}

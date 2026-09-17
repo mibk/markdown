@@ -22,6 +22,9 @@ type printer struct {
 	// prevBlock is the sibling block printed just before the one
 	// being printed, within the current container; nil for the first.
 	prevBlock Block
+	// refEnd is the offset just past the ] of a shortcut reference link,
+	// valid only while nothing else has been printed after it.
+	refEnd int
 	listOut
 	footnotes    map[*Footnote]*printedNote
 	footnotelist []*printedNote
@@ -124,6 +127,47 @@ func (b *printer) maybeQuoteNL(quote byte) bool {
 	if len(prev) >= len(cur)+1 && bytes.HasPrefix(prev, cur) && prev[len(cur)] == quote {
 		b.nl()
 		return true
+	}
+	return false
+}
+
+// attaches reports whether writing c next would attach to the ]
+// of a shortcut reference link just printed
+// and change what the text parses back as.
+func (p *printer) attaches(c byte) bool {
+	if p.refEnd == 0 || p.refEnd != p.buf.Len() {
+		return false
+	}
+	switch c {
+	case '(', '[':
+		// [a](b) and [a][b] would swallow the text as a destination or a label.
+		return true
+	case ':':
+		return p.labelLine()
+	}
+	return false
+}
+
+// labelLine reports whether all that is printed on the current line
+// is a link label, which a : written next would turn into
+// a link reference definition.
+func (p *printer) labelLine() bool {
+	_, line := cutLastNL(p.buf.Bytes())
+	line = bytes.TrimPrefix(line, p.prefix)
+	i := 0
+	for i < len(line) && line[i] == ' ' {
+		i++
+	}
+	if i > 3 || i == len(line) || line[i] != '[' {
+		return false
+	}
+	for i++; i < len(line); i++ {
+		switch line[i] {
+		case '\\':
+			i++
+		case ']':
+			return i == len(line)-1
+		}
 	}
 	return false
 }

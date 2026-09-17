@@ -24,6 +24,8 @@ type Link struct {
 	URL       string
 	Title     string
 	TitleChar byte // ', " or )
+	Kind      LinkKind
+	Label     string // normalized label of a reference link
 }
 
 // An Image is an [Inline] representing an [image] (<a> tag).
@@ -34,7 +36,19 @@ type Image struct {
 	URL       string
 	Title     string
 	TitleChar byte
+	Kind      LinkKind
+	Label     string
 }
+
+// A LinkKind is the syntax a [Link] or [Image] was written in.
+type LinkKind int
+
+const (
+	LinkInline    LinkKind = iota // [text](/url)
+	LinkFull                      // [text][label]
+	LinkCollapsed                 // [text][]
+	LinkShortcut                  // [text]
+)
 
 func (*Link) Inline() {}
 
@@ -54,10 +68,31 @@ func (x *Link) printHTML(p *printer) {
 
 func (x *Link) printMarkdown(p *printer) {
 	p.WriteByte('[')
+	start := p.buf.Len()
 	for _, c := range x.Inner {
 		c.printMarkdown(p)
 	}
-	p.WriteString("](")
+	kind := x.Kind
+	if kind == LinkCollapsed || kind == LinkShortcut {
+		if normalizeLabel(string(p.buf.Bytes()[start:])) != x.Label {
+			// The text as printed no longer normalizes to the label,
+			// so name the label explicitly.
+			kind = LinkFull
+		}
+	}
+	p.WriteByte(']')
+	switch kind {
+	case LinkFull:
+		p.WriteStrings("[", x.Label, "]")
+		return
+	case LinkCollapsed:
+		p.WriteString("[]")
+		return
+	case LinkShortcut:
+		p.refEnd = p.buf.Len()
+		return
+	}
+	p.WriteByte('(')
 	u := mdLinkEscaper.Replace(x.URL)
 	if u == "" || strings.ContainsAny(u, " ") {
 		u = "<" + u + ">"
@@ -193,8 +228,9 @@ func parseLinkClose(p *parser, s string, start int, open *openPlain) (*Link, int
 			if !ok {
 				break
 			}
-			if link, ok := p.links[normalizeLabel(label)]; ok {
-				return &Link{URL: link.URL, Title: link.Title}, i, true
+			key := normalizeLabel(label)
+			if def, ok := p.links[key]; ok {
+				return refLink(def, key, LinkFull), i, true
 			}
 			// Note: Could break here, but CommonMark dingus does not
 			// fall back to trying Text for [Text][Label] when Label is unknown.
@@ -205,14 +241,28 @@ func parseLinkClose(p *parser, s string, start int, open *openPlain) (*Link, int
 
 	// Collapsed or shortcut reference link: [Text][] or [Text].
 	end := i + 1
+	kind := LinkShortcut
 	if strings.HasPrefix(s[end:], "[]") {
 		end += 2
+		kind = LinkCollapsed
 	}
 
-	if link, ok := p.links[normalizeLabel(s[open.i:i])]; ok {
-		return &Link{URL: link.URL, Title: link.Title}, end, true
+	key := normalizeLabel(s[open.i:i])
+	if def, ok := p.links[key]; ok {
+		return refLink(def, key, kind), end, true
 	}
 	return nil, 0, false
+}
+
+// refLink returns the link a reference of the given kind
+// to the definition def with normalized label key resolves to.
+func refLink(def *Link, key string, kind LinkKind) *Link {
+	if key == "" {
+		// printLinks skips a label it cannot write back out,
+		// so keep the destination inline.
+		kind = LinkInline
+	}
+	return &Link{URL: def.URL, Title: def.Title, Kind: kind, Label: key}
 }
 
 // printLinks prints the links in the map, sorted by key,

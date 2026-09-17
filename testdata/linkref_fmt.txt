@@ -37,3 +37,74 @@ A document.
 [r1]: u1 (title1)
 [r2]: u2 "title2"
 [r3]: u3 'title3'
+-- full --
+[Link][1]
+
+[1]: u
+-- collapsed --
+[foo][]
+
+[foo]: u
+-- shortcut --
+[foo]
+
+[foo]: u
+-- image --
+![alt][1]
+
+[1]: u
+-- normalized label --
+[Text][Foo  BAR]
+
+[foo bar]: u
+-- want --
+[Text][foo bar]
+
+[foo bar]: u
+-- text no longer matching its label --
+[&amp;]
+
+[&amp;]: u
+-- want --
+[&][&amp;]
+
+[&amp;]: u
+-- text split across lines --
+> [foo
+> bar]
+>
+> [foo bar]: u
+-- want --
+> [foo
+> bar][foo bar]
+
+[foo bar]: u
+-- unprintable label --
+[a\]b] and [ok]
+
+[a\]b]: u1
+[ok]: u2
+-- want --
+[a\]b](u1) and [ok]
+
+[ok]: u2
+-- text attaching to a reference --
+[foo]&lpar;bar&rpar; and [foo]&lbrack;x&rbrack;
+
+[foo]: /url
+-- want --
+[foo]\(bar) and [foo]\[x]
+
+[foo]: /url
+-- text turning a reference into a definition --
+[a]&colon; def shape
+
+see [a]&colon; not a def
+
+[a]: /u1
+-- want --
+[a]\: def shape
+
+see [a]: not a def
+
+[a]: /u1
