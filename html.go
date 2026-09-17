@@ -34,6 +34,10 @@ func (b *HTMLBlock) printMarkdown(p *printer) {
 		if i > 0 {
 			p.nl()
 		}
+		if line == "" {
+			// On an empty line noTrim would only keep the container prefix's trailing space.
+			continue
+		}
 		p.WriteString(line)
 		p.noTrim()
 	}

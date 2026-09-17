@@ -176,6 +176,12 @@ Literally,
 </pre>
 
 Done.
+-- htmlblock2 --
+> <pre>
+> a
+>
+> b
+> </pre>
 -- list_tight --
   - one
   - two
