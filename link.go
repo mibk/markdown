@@ -277,7 +277,14 @@ func printLinks(p *printer, links map[string]*Link) {
 			keys = append(keys, k)
 		}
 	}
+	if len(keys) == 0 {
+		return
+	}
 	slices.Sort(keys)
+
+	if p.buf.Len() > 0 {
+		p.nl()
+	}
 	for _, k := range keys {
 		l := links[k]
 		u := l.URL

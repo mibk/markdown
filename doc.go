@@ -33,12 +33,7 @@ func (b *Document) printMarkdown(p *printer) {
 	}
 
 	// Add link reference definitions.
-	if len(b.Links) > 0 {
-		if p.buf.Len() > 0 {
-			p.nl()
-		}
-		printLinks(p, b.Links)
-	}
+	printLinks(p, b.Links)
 }
 
 func printMarkdownBlocks(bs []Block, p *printer) {

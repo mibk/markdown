@@ -108,3 +108,9 @@ see [a]&colon; not a def
 see [a]: not a def
 
 [a]: /u1
+-- only unprintable definitions --
+[a\]b]
+
+[a\]b]: u
+-- want --
+[a\]b](u)
