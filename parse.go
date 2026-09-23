@@ -216,6 +216,8 @@ func (p *Parser) parse(text string) (d *Document, corner bool) {
 			}
 		case *Item:
 			x.Blocks = fixBlocks(x.Blocks)
+		case *Footnote:
+			x.Blocks = fixBlocks(x.Blocks)
 		}
 	}
 

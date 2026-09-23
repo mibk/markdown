@@ -1,0 +1,32 @@
+Tests for printing footnote definitions in markdown.
+-- parser.json --
+{"Footnote": true}
+-- inplace --
+# A claim
+
+It rests on one fact[^1] and another[^2].
+
+[^1]: /facts/a.md#one
+[^2]: /facts/b.md#two
+
+## The next claim
+
+Unrelated.
+-- unreferenced --
+Text.
+
+[^1]: Never referenced.
+-- beforeref --
+[^a]: Defined first.
+
+Used later[^a].
+-- continued --
+A note[^1].
+
+[^1]: Its first line
+  continues lazily.
+-- want --
+A note[^1].
+
+[^1]: Its first line
+  continues lazily.

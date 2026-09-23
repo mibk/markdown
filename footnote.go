@@ -15,6 +15,12 @@ type Footnote struct {
 	Blocks []Block
 }
 
+func (*Footnote) Block() {}
+
+// printHTML prints nothing:
+// the definition renders in the list [ToHTML] appends.
+func (*Footnote) printHTML(p *printer) {}
+
 type FootnoteLink struct {
 	Label    string
 	Footnote *Footnote
@@ -64,7 +70,6 @@ func (x *FootnoteLink) printMarkdown(p *printer) {
 	if note == nil {
 		return
 	}
-	note.printed(p) // add to list for printFootnoteMarkdown
 	p.text(`[^`, x.Label, `]`)
 }
 
@@ -99,21 +104,12 @@ func printFootnoteHTML(p *printer) {
 }
 
 func (x *Footnote) printMarkdown(p *printer) {
+	if _, ok := p.prevBlock.(*Footnote); !ok {
+		p.maybeNL()
+	}
 	p.md(`[^`, x.Label, `]: `)
 	defer p.pop(p.push("  "))
 	printMarkdownBlocks(x.Blocks, p)
-}
-
-func printFootnoteMarkdown(p *printer) {
-	if len(p.footnotelist) == 0 {
-		return
-	}
-
-	p.maybeNL()
-	for _, note := range p.footnotelist {
-		p.nl()
-		note.note.printMarkdown(p)
-	}
 }
 
 func parseFootnoteRef(p *parser, s string, start int) (x Inline, end int, ok bool) {
@@ -186,6 +182,7 @@ func (b *footnoteBuilder) build(p *parser) Block {
 	if p.footnotes == nil {
 		p.footnotes = make(map[string]*Footnote)
 	}
-	p.footnotes[normalizeLabel(b.label)] = &Footnote{p.pos(), b.label, p.blocks()}
-	return &Empty{}
+	note := &Footnote{p.pos(), b.label, p.blocks()}
+	p.footnotes[normalizeLabel(b.label)] = note
+	return note
 }

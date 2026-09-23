@@ -104,8 +104,6 @@ func ToHTML(b Block) string {
 func Format(b Block) string {
 	var p printer
 	b.printMarkdown(&p)
-	printFootnoteMarkdown(&p)
-	// TODO footnotes?
 	return p.buf.String()
 }
 

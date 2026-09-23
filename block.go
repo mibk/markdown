@@ -9,6 +9,7 @@ package markdown
 //	CodeBlock
 //	Document
 //	Empty
+//	Footnote
 //	HTMLBlock
 //	Heading
 //	Item
