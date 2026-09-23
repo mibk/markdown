@@ -108,7 +108,9 @@ func (x *Footnote) printMarkdown(p *printer) {
 		p.maybeNL()
 	}
 	p.md(`[^`, x.Label, `]: `)
-	defer p.pop(p.push("  "))
+	defer p.pop(p.push("    "))
+	defer func(old bool) { p.curLoose = old }(p.curLoose)
+	p.curLoose = true
 	printMarkdownBlocks(x.Blocks, p)
 }
 

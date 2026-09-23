@@ -29,4 +29,12 @@ A note[^1].
 A note[^1].
 
 [^1]: Its first line
-  continues lazily.
+    continues lazily.
+-- paragraphs --
+A note[^1].
+
+[^1]: First paragraph.
+
+    Second paragraph.
+
+After.
