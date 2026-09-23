@@ -1,0 +1,72 @@
+-- parser.json --
+{"Callout": true}
+-- custom.md --
+> [!audit] mb 2026-09-23 supported
+> naklady-flamegraph v 969ba54
+-- custom.html --
+<div class="markdown-alert markdown-alert-audit">
+<p class="markdown-alert-title">mb 2026-09-23 supported</p>
+<p>naklady-flamegraph v 969ba54</p>
+</div>
+-- github.md --
+> [!NOTE]
+> Useful information.
+-- github.html --
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">NOTE</p>
+<p>Useful information.</p>
+</div>
+-- markeronly.md --
+> [!park]
+-- markeronly.html --
+<div class="markdown-alert markdown-alert-park">
+<p class="markdown-alert-title">park</p>
+</div>
+-- nested.md --
+> [!take] mb 2026-09-23
+> > [!question]
+> > Why?
+-- nested.html --
+<div class="markdown-alert markdown-alert-take">
+<p class="markdown-alert-title">mb 2026-09-23</p>
+<div class="markdown-alert markdown-alert-question">
+<p class="markdown-alert-title">question</p>
+<p>Why?</p>
+</div>
+</div>
+-- notmarker.md --
+> \[!note] escaped
+
+> [!note]: a colon
+
+> [!no-te] not letters
+
+> [!] no type
+
+> text
+> [!note] not the first line
+-- notmarker.html --
+<blockquote>
+<p>[!note] escaped</p>
+</blockquote>
+<blockquote>
+<p>[!note]: a colon</p>
+</blockquote>
+<blockquote>
+<p>[!no-te] not letters</p>
+</blockquote>
+<blockquote>
+<p>[!] no type</p>
+</blockquote>
+<blockquote>
+<p>text
+[!note] not the first line</p>
+</blockquote>
+-- parser.json --
+{}
+-- off.md --
+> [!note] with the extension off this is a quote
+-- off.html --
+<blockquote>
+<p>[!note] with the extension off this is a quote</p>
+</blockquote>

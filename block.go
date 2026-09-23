@@ -6,6 +6,7 @@ package markdown
 
 // Block is implemented by:
 //
+//	Callout
 //	CodeBlock
 //	Document
 //	Empty

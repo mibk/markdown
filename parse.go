@@ -84,6 +84,11 @@ type Parser struct {
 
 	// TODO
 	Footnote bool
+
+	// Callout determines whether the parser accepts a block quote
+	// opening with a line [!type] or [!type] title,
+	// the type being ASCII letters, as a [Callout].
+	Callout bool
 }
 
 type parser struct {
@@ -209,6 +214,8 @@ func (p *Parser) parse(text string) (d *Document, corner bool) {
 		case *Document:
 			x.Blocks = fixBlocks(x.Blocks)
 		case *Quote:
+			x.Blocks = fixBlocks(x.Blocks)
+		case *Callout:
 			x.Blocks = fixBlocks(x.Blocks)
 		case *List:
 			for _, item := range x.Items {
@@ -349,6 +356,7 @@ type starter func(*parser, line) (line, bool)
 var starters = []starter{
 	startIndentedCodeBlock,
 	startFencedCodeBlock,
+	startCallout,
 	startBlockQuote,
 	startATXHeading,
 	startSetextHeading,

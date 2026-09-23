@@ -25,6 +25,9 @@ type printer struct {
 	// refEnd is the offset just past the ] of a shortcut reference link,
 	// valid only while nothing else has been printed after it.
 	refEnd int
+	// markerEnd is the offset just past the prefix of the line
+	// after a callout marker, which no block there can run into.
+	markerEnd int
 	listOut
 	footnotes    map[*Footnote]*printedNote
 	footnotelist []*printedNote
@@ -86,7 +89,7 @@ func (b *printer) maybeNL() bool {
 	// paragraph continuation text.
 	before, cur := cutLastNL(b.buf.Bytes())
 	before, prev := cutLastNL(before)
-	if b.buf.Len() > 0 && bytes.Equal(cur, b.prefix) && bytes.HasPrefix(prev, b.prefix) {
+	if b.buf.Len() > 0 && b.buf.Len() != b.markerEnd && bytes.Equal(cur, b.prefix) && bytes.HasPrefix(prev, b.prefix) {
 		b.nl()
 		return true
 	}

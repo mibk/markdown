@@ -1,0 +1,24 @@
+Tests for printing callouts in markdown.
+-- parser.json --
+{"Callout": true}
+-- marker --
+> [!audit] mb 2026-09-23 supported
+> naklady-flamegraph v 969ba54
+-- spacing --
+>[!take]   mb 2026-09-23  
+>
+> Why it holds.
+-- want --
+> [!take] mb 2026-09-23
+> Why it holds.
+-- markeronly --
+> [!park] mb 2026-09-23
+
+Next paragraph.
+-- blocks --
+> [!question]
+> Is it true?
+>
+>     code
+-- escaped --
+> \[!note] a quote, not a callout
