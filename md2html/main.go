@@ -20,7 +20,7 @@ import (
 	"os"
 	"unicode/utf8"
 
-	"rsc.io/markdown"
+	"github.com/mibk/markdown"
 )
 
 func main() {

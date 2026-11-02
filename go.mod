@@ -1,4 +1,4 @@
-module rsc.io/markdown
+module github.com/mibk/markdown
 
 go 1.22.0
 

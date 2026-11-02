@@ -21,7 +21,7 @@ import (
 	"log"
 	"os"
 
-	"rsc.io/markdown"
+	"github.com/mibk/markdown"
 )
 
 var (

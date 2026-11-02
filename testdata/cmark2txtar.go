@@ -11,8 +11,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/mibk/markdown"
 	"golang.org/x/tools/txtar"
-	"rsc.io/markdown"
 )
 
 var parsers = map[string]string{
